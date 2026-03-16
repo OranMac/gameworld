@@ -1,20 +1,21 @@
 pub mod systems;
 pub mod game;
+pub mod utils;
 
-use crate::systems::movement::{MovementStrategy, PatrolMovement, RandomMovement};
-use crate::systems::combat::{CombatStrategy, AggressiveCombat};
-use crate::game::Game;
+use systems::movement::{MovementStrategy, PatrolMovement, RandomMovement};
+use systems::combat::{CombatStrategy, AggressiveCombat};
+use utils::input::{read_choice};
+use game::Game;
 
 fn main() {
 
-    println!("Select Movement Strategy:");
-    println!("1) Patrol Movement");
-    println!("2) Random Movement");
+    // ----------------------- Movement Strategy Choice -----------------------//
+    let movement_strategy = read_choice(
+        "Select Movement Strategy:\n1) Patrol Movement\n2) Random Movement\n> ",
+        &["1", "2"],
+    );
 
-    let mut movement_strategy = String::new();
-    std::io::stdin().read_line(&mut movement_strategy).expect("Failed to read input");
-
-    let movement: Box<dyn MovementStrategy> = match movement_strategy.trim() {
+    let movement: Box<dyn MovementStrategy> = match movement_strategy.as_str() {
         "1" => {
             println!("You selected: Patrol Movement");
             Box::new(PatrolMovement::new(vec![(0.0, 0.0), (5.0, 0.0), (5.0, 5.0)]))
@@ -24,33 +25,30 @@ fn main() {
             Box::new(RandomMovement::new(2.0))
         }
         _ => {
-            println!("Invalid choice, defaulting to Patrol Movement.");
-            Box::new(PatrolMovement::new(vec![(0.0, 0.0), (5.0, 0.0), (5.0, 5.0)]))
+            unreachable!() // read_choice ensures this case is never hit
         }
     };
 
-    println!("Select Combat Strategy:");
-    println!("1) Aggressive Combat");
-    println!("2) \"Exercise\" Combat, to be completed later Movement");
-
-    let mut combat_strategy = String::new();
-    std::io::stdin().read_line(&mut combat_strategy).expect("Failed to read input");
-
-    let combat: Box<dyn CombatStrategy> = match combat_strategy.trim() {
-        "1" => {
-            println!("You selected: Aggressive Combat");
-            Box::new(AggressiveCombat::new(1.5))
-        }
-        "2" => {
-            println!("You selected: Exercise Combat (defaulting to Aggressive)");
-            Box::new(AggressiveCombat::new(1.2)) 
-        }
-        _ => {
-            println!("Invalid choice, defaulting to Aggressive Combat");
-            Box::new(AggressiveCombat::new(1.2))
-        }
+    // ----------------------- Combat Strategy Choice -----------------------//
+    
+    let combat_strategy = read_choice(
+        "\nSelect Combat Strategy:\n1) Aggressive Combat\n2) \"Exercise\" Combat, to be completed later\n> ",
+          &["1", "2"],
+    );
+    
+    let combat: Box<dyn CombatStrategy> = match combat_strategy.as_str() {
+       "1" => {
+           println!("You selected: Aggressive Combat");
+           Box::new(AggressiveCombat::new(1.5))
+       }
+       "2" => {
+           println!("You selected: A combat approach not yet coded, defaulting to Aggressive");
+           Box::new(AggressiveCombat::new(1.2))
+       }
+       _ => {
+            unreachable!() // read_choice ensures this case is never hit
+          }
     };
-
+ 
     Game::run(movement, combat); // generic call; objects defined at runtime
-
 }
