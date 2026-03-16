@@ -8,9 +8,11 @@ use systems::movement::{MovementStrategy, PatrolMovement, RandomMovement};
 use systems::combat::{CombatStrategy, AggressiveCombat};
 use utils::input::{read_choice};
 use game::Game;
-use entities::entity::Entity;
+use entities::entity::{EmotionTarget,Entity};
 use factories::player_factory::PlayerFactory;
 use factories::enemy_factory::EnemyFactory;
+
+use crate::systems::combat::EmotionalDamageCombat;
 fn main() {
 
     // ----------------------- Movement Strategy Choice -----------------------//
@@ -36,7 +38,7 @@ fn main() {
     // ----------------------- Combat Strategy Choice -----------------------//
     
     let combat_strategy = read_choice(
-        "\nSelect Combat Strategy:\n1) Aggressive Combat\n2) \"Exercise\" Combat, to be completed later\n> ",
+        "\nSelect Combat Strategy:\n1) Aggressive Combat\n2) \"Exercise\" Emotonal Combat\n> ",
           &["1", "2"],
     );
     
@@ -46,8 +48,8 @@ fn main() {
            Box::new(AggressiveCombat::new(1.5))
        }
        "2" => {
-           println!("You selected: A combat approach not yet coded, defaulting to Aggressive");
-           Box::new(AggressiveCombat::new(1.2))
+           println!("You selected: Emotonal Combat");
+           Box::new(EmotionalDamageCombat::new(EmotionTarget::Pride))
        }
        _ => {
             unreachable!() // read_choice ensures this case is never hit
@@ -55,14 +57,14 @@ fn main() {
     };
  
     // ---------------- Create menu-driven Entity ----------------
-    let mut player_custom = Entity::from_strategies("Player (user choice)", movement, combat);
+    let mut player_custom = Entity::from_strategies("Player (user choice)",EmotionTarget::Pride, movement, combat);
 
     // ---------------- Create factory-based Entities ----------------
     let player_factory = PlayerFactory;
     let enemy_factory = EnemyFactory;
 
-    let mut player_factory_entity = Entity::new("Player (factory made)", &player_factory);
-    let mut enemy_factory_entity = Entity::new("Enemy (factory made)", &enemy_factory);
+    let mut player_factory_entity = Entity::new("Player (factory made)", EmotionTarget::Greed ,&player_factory);
+    let mut enemy_factory_entity = Entity::new("Enemy (factory made)", EmotionTarget::Ego ,&enemy_factory);
 
     // ---------------- Run Simulation ----------------
     println!("\n>>> Running Player (user choice) vs Enemy (factory made) <<<");
