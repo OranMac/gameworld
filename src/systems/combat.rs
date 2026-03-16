@@ -27,6 +27,40 @@ impl CombatStrategy for AggressiveCombat {
 
     // Handle defense: aggressive strategy does not reduce incoming damage
     fn calculate_damage_taken(&self, incoming_damage: f32) -> f32 {
-        return incoming_damage;
+        incoming_damage
+    }
+}
+
+
+// Future Idea for enum bases emotional damage, but no target yet to really implement it
+// Emotion target is public due to enums being private by default
+pub enum EmotionTarget {
+    Pride,
+    Ego,
+    Worth,
+}
+
+pub struct EmotionalDamageCombat {
+    emotional_damage: EmotionTarget
+}
+
+impl EmotionalDamageCombat {
+    pub fn new(target: EmotionTarget) -> Self {
+        Self {
+            // Select the which part of ones person to target
+            emotional_damage: target,
+        }
+    }
+}
+
+impl CombatStrategy for EmotionalDamageCombat {
+    // Calculate attack damage: multiply attack_power by damage_multiplier
+    fn calculate_attack_damage(&self, attack_power: f32) -> f32 {
+        5.0
+    }
+
+    // Handle defense: aggressive strategy does not reduce incoming damage
+    fn calculate_damage_taken(&self, incoming_damage: f32) -> f32 {
+        incoming_damage
     }
 }
