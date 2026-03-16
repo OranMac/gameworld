@@ -41,3 +41,26 @@ impl MovementStrategy for PatrolMovement {
         // placeholder for future logic (e.g., timing, animations)
     }
 }
+use rand::Rng;
+pub struct RandomMovement {
+    range: f32,
+}
+
+impl RandomMovement {
+    pub fn new(range: f32) -> Self {
+        Self { range }
+    }
+}
+
+impl MovementStrategy for RandomMovement {
+    fn compute_next_waypoint(&mut self, current_waypoint: (f32, f32)) -> (f32, f32) {
+        let mut rng =  rand::thread_rng();
+        let dx = rng.gen_range(-self.range..=self.range);
+        let dy = rng.gen_range(-self.range..=self.range);
+        (current_waypoint.0 + dx, current_waypoint.1 + dy)
+    }
+
+    fn update(&mut self) {
+        // Update random logic
+    }
+}
