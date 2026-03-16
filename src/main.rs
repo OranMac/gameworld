@@ -1,12 +1,16 @@
 pub mod systems;
 pub mod game;
 pub mod utils;
+pub mod entities;
+pub mod factories;
 
 use systems::movement::{MovementStrategy, PatrolMovement, RandomMovement};
 use systems::combat::{CombatStrategy, AggressiveCombat};
 use utils::input::{read_choice};
 use game::Game;
-
+use entities::entity::Entity;
+use factories::player_factory::PlayerFactory;
+use factories::enemy_factory::EnemyFactory;
 fn main() {
 
     // ----------------------- Movement Strategy Choice -----------------------//
@@ -50,5 +54,19 @@ fn main() {
           }
     };
  
-    Game::run(movement, combat); // generic call; objects defined at runtime
+    // ---------------- Create menu-driven Entity ----------------
+    let mut player_custom = Entity::from_strategies("Player (user choice)", movement, combat);
+
+    // ---------------- Create factory-based Entities ----------------
+    let player_factory = PlayerFactory;
+    let enemy_factory = EnemyFactory;
+
+    let mut player_factory_entity = Entity::new("Player (factory made)", &player_factory);
+    let mut enemy_factory_entity = Entity::new("Enemy (factory made)", &enemy_factory);
+
+    // ---------------- Run Simulation ----------------
+    println!("\n>>> Running Player (user choice) vs Enemy (factory made) <<<");
+    Game::run_entity(&mut player_custom, &mut enemy_factory_entity);
+    println!("\n>>> Running Player (factory made) vs Enemy (factory made) <<<");
+    Game::run_entity(&mut player_factory_entity, &mut enemy_factory_entity);
 }
