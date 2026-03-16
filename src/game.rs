@@ -1,5 +1,3 @@
-use crate::systems::movement::MovementStrategy;
-use crate::systems::combat::CombatStrategy;
 use crate::entities::entity::Entity;
 
 pub struct Game;
