@@ -5,9 +5,9 @@ pub struct Game;
 
 impl Game {
 
-    pub fn run<M: MovementStrategy, C: CombatStrategy>(
-        mut movement_strategy: M, 
-        mut combat_strategy: C
+    pub fn run(
+    mut movement_strategy: Box<dyn MovementStrategy>,
+    combat_strategy: Box<dyn CombatStrategy>,
     ) {
         
         println!("\n--- Starting Movement Simulation ---");
