@@ -3,7 +3,7 @@ use crate::entities::entity::Entity;
 pub struct Game;
 
 impl Game {
-        // Run movement and combat for two entities (player and enemy)
+    // Run movement and combat for two entities (player and enemy)
     pub fn run_entity(player: &mut Entity, enemy: &mut Entity) {
         
         println!("\n--- PLAYER MOVEMENT ---");

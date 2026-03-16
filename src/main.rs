@@ -11,6 +11,8 @@ use game::Game;
 use entities::entity::Entity;
 use factories::player_factory::PlayerFactory;
 use factories::enemy_factory::EnemyFactory;
+
+use crate::systems::combat::PrideCombat;
 fn main() {
 
     // ----------------------- Movement Strategy Choice -----------------------//
@@ -36,7 +38,7 @@ fn main() {
     // ----------------------- Combat Strategy Choice -----------------------//
     
     let combat_strategy = read_choice(
-        "\nSelect Combat Strategy:\n1) Aggressive Combat\n2) \"Exercise\" Combat, to be completed later\n> ",
+        "\nSelect Combat Strategy:\n1) Aggressive Combat\n2) \"Exercise\" Pride Combat\n> ",
           &["1", "2"],
     );
     
@@ -46,8 +48,8 @@ fn main() {
            Box::new(AggressiveCombat::new(1.5))
        }
        "2" => {
-           println!("You selected: A combat approach not yet coded, defaulting to Aggressive");
-           Box::new(AggressiveCombat::new(1.2))
+           println!("You selected: Pride Combat");
+           Box::new(PrideCombat::new(1.5))
        }
        _ => {
             unreachable!() // read_choice ensures this case is never hit
