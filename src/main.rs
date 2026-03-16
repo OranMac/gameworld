@@ -1,4 +1,7 @@
 pub mod systems;
+pub mod game;
+
+use game::Game;
 
 use systems::movement::{MovementStrategy, PatrolMovement, RandomMovement};
 
@@ -11,39 +14,22 @@ fn main() {
     let mut movement_strategy = String::new();
     std::io::stdin().read_line(&mut movement_strategy).expect("Failed to read input");
 
-    match movement_strategy.trim() {
+         match movement_strategy.trim() {
         "1" => {
             println!("You selected: Patrol Movement");
-            println!("\n--- Starting Movement Simulation ---");
-            let mut patrol_route = PatrolMovement::new(vec![(0.0, 0.0), (5.0, 0.0), (5.0, 5.0)]);
-            let mut current_waypoint = (0.0, 0.0);
-            for _ in 0..5 {
-                current_waypoint = patrol_route.compute_next_waypoint(current_waypoint);
-                println!("Moved to position: {:?}", current_waypoint);
-            }
-            println!("------------------------------------\n");
+            let movement_route = PatrolMovement::new(vec![(0.0, 0.0), (5.0, 0.0), (5.0, 5.0)]);
+            Game::run(movement_route); // generic call, type known at compile time
         }
         "2" => {
             println!("You selected: Random Movement");
-            println!("\n--- Starting Movement Simulation ---");
-            let mut random_route = RandomMovement::new(2.0);
-            let mut current_waypoint = (0.0, 0.0);
-            for _ in 0..5 {
-                current_waypoint = random_route.compute_next_waypoint(current_waypoint);
-                println!("Moved to position: {:?}", current_waypoint);
-            }
-            println!("------------------------------------\n");
+            let movement_route = RandomMovement::new(2.0);
+            Game::run(movement_route); // generic call, type known at compile time
         }
         _ => {
             println!("Invalid choice, defaulting to Patrol Movement.");
-            println!("\n--- Starting Movement Simulation ---");
-            let mut patrol_route = PatrolMovement::new(vec![(0.0, 0.0), (5.0, 0.0), (5.0, 5.0)]);
-            let mut current_waypoint = (0.0, 0.0);
-            for _ in 0..5 {
-                current_waypoint = patrol_route.compute_next_waypoint(current_waypoint);
-                println!("Moved to position: {:?}", current_waypoint);
-            }
-            println!("------------------------------------\n");
+            let movement_route = PatrolMovement::new(vec![(0.0, 0.0), (5.0, 0.0), (5.0, 5.0)]);
+            Game::run(movement_route);
         }
     }
+
 } 
