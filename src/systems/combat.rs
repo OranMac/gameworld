@@ -34,33 +34,56 @@ impl CombatStrategy for AggressiveCombat {
 
 // Future Idea for enum bases emotional damage, but no target yet to really implement it
 // Emotion target is public due to enums being private by default
-pub enum EmotionTarget {
-    Pride,
-    Ego,
-    Worth,
+// pub enum EmotionTarget {
+//     Pride,
+//     Ego,
+//     Worth,
+// }
+
+// pub struct EmotionalDamageCombat {
+//     emotional_damage: EmotionTarget
+// }
+
+// impl EmotionalDamageCombat {
+//     pub fn new(target: EmotionTarget) -> Self {
+//         Self {
+//             // Select the which part of ones person to target
+//             emotional_damage: target,
+//         }
+//     }
+// }
+
+// impl CombatStrategy for EmotionalDamageCombat {
+//     // Calculate attack damage: multiply attack_power by damage_multiplier
+//     fn calculate_attack_damage(&self, attack_power: f32) -> f32 {
+//         5.0
+//     }
+
+//     // Handle defense: aggressive strategy does not reduce incoming damage
+//     fn calculate_damage_taken(&self, incoming_damage: f32) -> f32 {
+//         incoming_damage
+//     }
+// }
+
+pub struct PrideCombat{
+    emotion_multiplier: f32,
 }
 
-pub struct EmotionalDamageCombat {
-    emotional_damage: EmotionTarget
-}
-
-impl EmotionalDamageCombat {
-    pub fn new(target: EmotionTarget) -> Self {
+impl PrideCombat {
+    pub fn new(multiplier: f32) -> Self {
         Self {
-            // Select the which part of ones person to target
-            emotional_damage: target,
+            // Multiplier applied to attack_power
+            emotion_multiplier: multiplier/2 as f32,
         }
     }
 }
 
-impl CombatStrategy for EmotionalDamageCombat {
-    // Calculate attack damage: multiply attack_power by damage_multiplier
+impl CombatStrategy for PrideCombat {
     fn calculate_attack_damage(&self, attack_power: f32) -> f32 {
-        5.0
+        attack_power * self.emotion_multiplier
     }
 
-    // Handle defense: aggressive strategy does not reduce incoming damage
     fn calculate_damage_taken(&self, incoming_damage: f32) -> f32 {
-        incoming_damage
+        f32::abs(incoming_damage - incoming_damage*self.emotion_multiplier)
     }
 }
