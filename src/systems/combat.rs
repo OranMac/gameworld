@@ -24,7 +24,7 @@ impl AggressiveCombat {
 
 impl CombatStrategy for AggressiveCombat {
     // Calculate attack damage: multiply attack_power by damage_multiplier
-    fn calculate_attack_damage(&self, oponent: &Entity, attack_power: f32) -> f32 {
+    fn calculate_attack_damage(&self, _oponent: &Entity, attack_power: f32) -> f32 {
         attack_power * self.damage_multiplier
     }
 
