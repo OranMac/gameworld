@@ -18,7 +18,7 @@ fn main() {
 
     // ----------------------- Movement Strategy Choice -----------------------//
     let movement_strategy = read_choice(
-        "Select Movement Strategy:\n1) Patrol Movement\n2) Random Movement\n> ",
+        "Select Movement Strategy:\n1) Patrol Movement\n2) Random Movement\n2) Scared Movement\n> ",
         &["1", "2", "3"],
     );
 
