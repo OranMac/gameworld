@@ -13,12 +13,13 @@ use factories::player_factory::PlayerFactory;
 use factories::enemy_factory::EnemyFactory;
 
 use crate::systems::combat::EmotionalDamageCombat;
+use crate::systems::movement::ScaredMovement;
 fn main() {
 
     // ----------------------- Movement Strategy Choice -----------------------//
     let movement_strategy = read_choice(
         "Select Movement Strategy:\n1) Patrol Movement\n2) Random Movement\n> ",
-        &["1", "2"],
+        &["1", "2", "3"],
     );
 
     let movement: Box<dyn MovementStrategy> = match movement_strategy.as_str() {
@@ -29,6 +30,10 @@ fn main() {
         "2" => {
             println!("You selected: Random Movement");
             Box::new(RandomMovement::new(2.0))
+        }
+        "3" => {
+            println!("You selected: Scared Movement");
+            Box::new(ScaredMovement::new(2.0,(0.0,0.0)))
         }
         _ => {
             unreachable!() // read_choice ensures this case is never hit

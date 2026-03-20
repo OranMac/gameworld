@@ -64,3 +64,40 @@ impl MovementStrategy for RandomMovement {
         // Update random logic
     }
 }
+
+pub struct ScaredMovement {
+    speed: f32,
+    point_of_fear: (f32,f32,),
+}
+
+impl ScaredMovement {
+    pub fn new(speed:f32, point_of_fear:(f32,f32)) -> Self {
+        Self {
+            speed,
+            point_of_fear,
+        }
+    }
+}
+
+impl MovementStrategy for ScaredMovement {
+    fn compute_next_waypoint(&mut self,current_waypoint: (f32, f32)) -> (f32, f32) {
+        let mut new_position: (f32,f32) = (0.0,0.0);
+        if current_waypoint.0 >= self.point_of_fear.0{
+            new_position.0 = current_waypoint.0 + self.speed;
+        } else {
+            new_position.0 = current_waypoint.0 - self.speed;
+        }
+        if current_waypoint.1 >= self.point_of_fear.1{
+            new_position.1 = current_waypoint.1 + self.speed;
+        } else {
+            new_position.1 = current_waypoint.1 - self.speed;
+        }
+    
+    
+        new_position
+    }
+
+    fn update(&mut self) {
+        // Update random logic
+    }
+}
