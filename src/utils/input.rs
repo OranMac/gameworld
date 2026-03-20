@@ -30,7 +30,7 @@ pub fn read_float(prompt: &str) -> f32 {
     loop {
         match read_line(prompt).parse::<f32>(){
             Ok(number) => return number,
-            Err(_) => println!("{}", "Invalid input. Please enter a decimal number:".bold().red()),
+            Err(_) => println!("{}", "Invalid input. Please enter a float number:".bold().red()),
         }
     }
 }
