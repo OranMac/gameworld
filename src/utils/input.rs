@@ -1,4 +1,5 @@
 use std::io::{self, Write};
+use colored::Colorize;
 
 /// Reads a line from the console and trims whitespace.
 pub fn read_line(prompt: &str) -> String {
@@ -20,6 +21,16 @@ pub fn read_choice(prompt: &str, options: &[&str]) -> String {
             return input;
         }
 
-        println!("Invalid choice, please try again.");
+        println!("{}", "Invalid choice, please try again.".bold().red());
+    }
+}
+
+/// Reads a line and extracts
+pub fn read_float(prompt: &str) -> f32 {
+    loop {
+        match read_line(prompt).parse::<f32>(){
+            Ok(number) => return number,
+            Err(_) => println!("{}", "Invalid input. Please enter a float number:".bold().red()),
+        }
     }
 }
