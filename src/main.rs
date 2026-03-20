@@ -3,7 +3,11 @@ pub mod game;
 pub mod utils;
 pub mod entities;
 pub mod factories;
+pub mod observers;
 
+use observers::game_state_subject::GameStateSubject;
+use observers::subject::Subject;
+use observers::logger_observer::LoggerObserver;
 use systems::movement::{MovementStrategy, PatrolMovement, RandomMovement};
 use systems::combat::{CombatStrategy, AggressiveCombat};
 use utils::input::{read_choice};
@@ -18,6 +22,9 @@ use crate::systems::movement::ScaredMovement;
 use crate::utils::input::read_line;
 fn main() {
     // ---------------- Create menu-driven Entity ----------------
+        // Game state observer setup
+    let mut state_subject = GameStateSubject::new();
+    let _logger_id = state_subject.attach(Box::new(LoggerObserver::new()));
     let mut player_custom = Entity::default();
     let mut enemy_custom = Entity::default();
     for entity in [&mut player_custom,&mut enemy_custom]{
@@ -149,6 +156,7 @@ fn main() {
     
     println!("\n>>> {} vs {} <<<",player_custom.name.bold().green(), enemy_custom.name.bold().bright_red());
     Game::run_entity(&mut player_custom, &mut enemy_custom);
+    Game::run_with_state_events(&mut player_custom, &mut enemy_custom, &mut state_subject);
 
     // ---------------- Create factory-based Entities ----------------
     let player_factory = PlayerFactory;
@@ -161,4 +169,5 @@ fn main() {
 
     println!("\n>>> {} vs {} <<<",player_factory_entity.name.bold().green(), enemy_factory_entity.name.bold().bright_red());
     Game::run_entity(&mut player_factory_entity, &mut enemy_factory_entity);
+    Game::run_with_state_events(&mut player_factory_entity, &mut enemy_factory_entity, &mut state_subject);
 }
