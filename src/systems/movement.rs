@@ -101,3 +101,91 @@ impl MovementStrategy for ScaredMovement {
         // Update random logic
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ---------- PatrolMovement Tests ----------
+
+    #[test]
+    fn patrol_returns_waypoints_in_order() {
+        let mut patrol = PatrolMovement::new(vec![(1.0, 1.0), (2.0, 2.0)]);
+
+        let first = patrol.compute_next_waypoint((0.0, 0.0));
+        let second = patrol.compute_next_waypoint((0.0, 0.0));
+
+        assert_eq!(first, (1.0, 1.0));
+        assert_eq!(second, (2.0, 2.0));
+    }
+
+    #[test]
+    fn patrol_loops_back_to_start() {
+        let mut patrol = PatrolMovement::new(vec![(1.0, 1.0)]);
+
+        let first = patrol.compute_next_waypoint((0.0, 0.0));
+        let second = patrol.compute_next_waypoint((0.0, 0.0));
+
+        assert_eq!(first, (1.0, 1.0));
+        assert_eq!(second, (1.0, 1.0)); // loops
+    }
+
+    #[test]
+    fn patrol_empty_returns_current_position() {
+        let mut patrol = PatrolMovement::new(vec![]);
+
+        let current = (5.0, 5.0);
+        let result = patrol.compute_next_waypoint(current);
+
+        assert_eq!(result, current);
+    }
+
+    // ---------- RandomMovement Tests ----------
+
+    #[test]
+    fn random_movement_stays_within_range() {
+        let mut movement = RandomMovement::new(5.0);
+        let current = (10.0, 10.0);
+
+        let result = movement.compute_next_waypoint(current);
+
+        let dx = result.0 - current.0;
+        let dy = result.1 - current.1;
+
+        assert!(dx >= -5.0 && dx <= 5.0);
+        assert!(dy >= -5.0 && dy <= 5.0);
+    }
+
+    // ---------- ScaredMovement Tests ----------
+
+    #[test]
+    fn scared_moves_away_from_fear_point_positive_direction() {
+        let mut movement = ScaredMovement::new(1.0, (0.0, 0.0));
+        let current = (5.0, 5.0);
+
+        let result = movement.compute_next_waypoint(current);
+
+        assert_eq!(result, (6.0, 6.0));
+    }
+
+    #[test]
+    fn scared_moves_away_from_fear_point_negative_direction() {
+        let mut movement = ScaredMovement::new(1.0, (10.0, 10.0));
+        let current = (5.0, 5.0);
+
+        let result = movement.compute_next_waypoint(current);
+
+        assert_eq!(result, (4.0, 4.0));
+    }
+
+    #[test]
+    fn scared_moves_correctly_mixed_axes() {
+        let mut movement = ScaredMovement::new(2.0, (5.0, 0.0));
+        let current = (3.0, 3.0);
+
+        let result = movement.compute_next_waypoint(current);
+
+        // x < fear.x → move left, y > fear.y → move up
+        assert_eq!(result, (1.0, 5.0));
+    }
+}
