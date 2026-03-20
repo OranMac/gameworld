@@ -20,11 +20,11 @@ pub struct Entity {
 
 impl Entity {
     // Create entity via Abstract (Entity)Factory
-    pub fn new(name: &str, emo_target: EmotionTarget, factory: &dyn EntityFactory) -> Self {
+    pub fn new(name: &str, factory: &dyn EntityFactory) -> Self {
         Self {
             name: name.to_string(),
             position: (0.0,0.0),
-            emo_weakness: emo_target,
+            emo_weakness: factory.create_emotional_weakness(),
             movement: factory.create_movement(),
             combat: factory.create_combat(),
         }

@@ -1,3 +1,4 @@
+use crate::entities::entity::EmotionTarget;
 use crate::factories::entity_factory::EntityFactory;
 use crate::systems::movement::{PatrolMovement, MovementStrategy};
 use crate::systems::combat::{AggressiveCombat, CombatStrategy};
@@ -5,6 +6,11 @@ use crate::systems::combat::{AggressiveCombat, CombatStrategy};
 pub struct PlayerFactory;
 
 impl EntityFactory for PlayerFactory {
+
+    fn create_emotional_weakness(&self) -> EmotionTarget {
+        EmotionTarget::Ego
+    }
+
     fn create_movement(&self) -> Box<dyn MovementStrategy> {
         Box::new(PatrolMovement::new(vec![(0.0,0.0),(5.0,0.0),(5.0,5.0)]))
     }
