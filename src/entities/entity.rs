@@ -1,9 +1,9 @@
-use crate::systems::movement::MovementStrategy;
-use crate::systems::combat::CombatStrategy;
+use crate::systems::movement::{MovementStrategy, ScaredMovement};
+use crate::systems::combat::{CombatStrategy, EmotionalDamageCombat};
 use crate::factories::entity_factory::EntityFactory;
 
 // Emotion target is public due to enums being private by default
-#[derive(PartialEq)]
+#[derive(PartialEq,Debug)]
 pub enum EmotionTarget {
     Pride,
     Ego,
@@ -51,5 +51,26 @@ impl Entity {
 
     pub fn defend(&self, damage: f32) -> f32 {
         self.combat.calculate_damage_taken(damage)
+    }
+}
+
+impl Default for Entity {
+    fn default() -> Self {
+        Self {
+            name: String::default(),
+            position: (0.0, 0.0),
+            emo_weakness: EmotionTarget::Pride,
+            movement: Box::new(ScaredMovement::new(0.0,(0.0,0.0))),
+            combat: Box::new(EmotionalDamageCombat::new(EmotionTarget::Pride)),
+        }
+    }
+}
+
+use std::fmt;
+
+impl fmt::Display for Entity {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "Name: {}, Position: {},{}, Emotion: {:?}", 
+        self.name, self.position.0,self.position.1,self.emo_weakness)
     }
 }
