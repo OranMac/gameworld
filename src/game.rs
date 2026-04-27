@@ -1,20 +1,20 @@
 use crate::entities::entity::Entity;
-use crate::GameStateSubject;
-use crate::observers::subject::GameStateEvent;
+use crate::states::game_context::GameContext;
+use crate::states::game_event::GameEvent;
 use colored::Colorize;
 pub struct Game;
 
 impl Game {
     // Run movement and combat for two entities (player and enemy)
-    pub fn run_with_state_events(player: &mut Entity, enemy: &mut Entity, subject: &mut GameStateSubject) {
-        subject.set_state(GameStateEvent::GameStarted);
+       pub fn run_with_state_events(player: &mut Entity, enemy: &mut Entity, ctx: &mut GameContext) {
+        ctx.handle_event(GameEvent::StartGame);
         
         println!("\n--- PLAYER MOVEMENT ---");
         for i in 0..5 {
             player.update_position();
             println!("Step {} → Player '{}' at {:?}", i + 1, player.name.green(), player.position);
-            if i == 1 { subject.set_state(GameStateEvent::GamePaused); }
-            if i == 2 { subject.set_state(GameStateEvent::GameResumed); }
+            if i == 1 { ctx.handle_event(GameEvent::PauseGame); }
+            if i == 2 { ctx.handle_event(GameEvent::ResumeGame); }
         }
         println!("------------------------------------\n");
 
@@ -34,7 +34,7 @@ impl Game {
             player.name.green(), damage_dealt, enemy.name.red(), damage_received
         );
 
-        subject.set_state(GameStateEvent::GameEnded);
+        ctx.handle_event(GameEvent::EndGame);
     }
 
 
