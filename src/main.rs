@@ -4,9 +4,10 @@ pub mod utils;
 pub mod entities;
 pub mod factories;
 pub mod observers;
+pub mod states;
 
-use observers::game_state_subject::GameStateSubject;
-use observers::subject::Subject;
+use crate::states::game_context::GameContext;
+use crate::states::idle_state::IdleState;
 use observers::logger_observer::LoggerObserver;
 use systems::movement::{MovementStrategy, PatrolMovement, RandomMovement};
 use systems::combat::{CombatStrategy, AggressiveCombat};
@@ -129,11 +130,30 @@ fn custom_selection(entity: &mut Entity){
     println!("{}", entity);
 }
 
+fn demo_state_observer() {
+    use states::game_context::GameContext;
+    use states::idle_state::IdleState;
+    use states::game_event::GameEvent;
+
+    println!("\n=== State + Observer Demo ===\n");
+
+    // Create context with initial state + attach existing logger
+    let mut ctx = GameContext::new(Box::new(IdleState::new()));
+    ctx.attach_observer(Box::new(LoggerObserver::new()));
+
+    // Fire events - states notify observers automatically
+    ctx.handle_event(GameEvent::StartGame);   // Idle → Playing (logs GameStarted)
+    ctx.handle_event(GameEvent::PauseGame);   // Playing → Paused (logs GamePaused)
+    ctx.handle_event(GameEvent::ResumeGame);  // Paused → Playing (logs GameResumed)
+    ctx.handle_event(GameEvent::EndGame);     // Playing → GameOver (logs GameEnded)
+}
+
 fn main() {
     // ---------------- Create menu-driven Entity ----------------
         // Game state observer setup
-    let mut state_subject = GameStateSubject::new();
-    let _logger_id = state_subject.attach(Box::new(LoggerObserver::new()));
+        // Game state context with observer attached
+    let mut ctx = GameContext::new(Box::new(IdleState::new()));
+    ctx.attach_observer(Box::new(LoggerObserver::new()));
     let mut player = Entity::default();
     let mut enemy = Entity::default();
     let choice = read_choice(
@@ -159,5 +179,6 @@ fn main() {
             unreachable!() // read_choice ensures this case is never hit
         }
     };
-    Game::run_with_state_events(&mut player, &mut enemy, &mut state_subject);
+     Game::run_with_state_events(&mut player, &mut enemy, &mut ctx);
+
 }
