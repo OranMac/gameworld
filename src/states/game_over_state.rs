@@ -1,3 +1,4 @@
+use crate::entities::entity::Entity;
 use crate::states::game_state::GameState;
 use crate::states::game_context::GameContext;
 use crate::states::game_event::GameEvent;
@@ -24,11 +25,11 @@ impl GameState for GameOverState {
         
     }
 
-    fn update(&mut self, _ctx: &mut GameContext) {
+    fn update(&mut self, _ctx: &mut GameContext, _ent: &mut Entity) {
         // No updates while paused
     }
 
-    fn handle_event(&mut self, ctx: &mut GameContext, event: GameEvent) {
+    fn handle_event(&mut self, ctx: &mut GameContext, event: GameEvent, _ent: &mut Entity) {
         match event {
             GameEvent::StartGame => ctx.set_state(Box::new(IdleState::new())),
             GameEvent::PauseGame => {},

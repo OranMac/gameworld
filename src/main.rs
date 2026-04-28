@@ -130,24 +130,6 @@ fn custom_selection(entity: &mut Entity){
     println!("{}", entity);
 }
 
-fn demo_state_observer() {
-    use states::game_context::GameContext;
-    use states::idle_state::IdleState;
-    use states::game_event::GameEvent;
-
-    println!("\n=== State + Observer Demo ===\n");
-
-    // Create context with initial state + attach existing logger
-    let mut ctx = GameContext::new(Box::new(IdleState::new()));
-    ctx.attach_observer(Box::new(LoggerObserver::new()));
-
-    // Fire events - states notify observers automatically
-    ctx.handle_event(GameEvent::StartGame);   // Idle → Playing (logs GameStarted)
-    ctx.handle_event(GameEvent::PauseGame);   // Playing → Paused (logs GamePaused)
-    ctx.handle_event(GameEvent::ResumeGame);  // Paused → Playing (logs GameResumed)
-    ctx.handle_event(GameEvent::EndGame);     // Playing → GameOver (logs GameEnded)
-}
-
 fn main() {
     // ---------------- Create menu-driven Entity ----------------
         // Game state observer setup

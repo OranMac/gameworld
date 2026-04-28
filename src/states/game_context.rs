@@ -1,3 +1,5 @@
+use crate::entities;
+use crate::entities::entity::Entity;
 use crate::states::game_state::GameState;
 use crate::states::game_event::GameEvent;
 use crate::observers::game_state_subject::GameStateSubject;
@@ -37,9 +39,9 @@ impl GameContext {
     // Delegate update to current state
     // Delegate update to current state
        // Delegate update to current state
-    pub fn update(&mut self) {
+    pub fn update(&mut self, ent: &mut Entity) {
         if let Some(mut state) = self.current_state.take() {
-            state.update(self);
+            state.update(self, ent);
             // Check if a state transition happened during update
             if self.current_state.is_some() {
                 // A new state was set, call exit on the old state
@@ -52,9 +54,9 @@ impl GameContext {
     }
 
     // Delegate event handling to current state
-    pub fn handle_event(&mut self, event: GameEvent) {
+    pub fn handle_event(&mut self, event: GameEvent, ent: &mut Entity) {
         if let Some(mut state) = self.current_state.take() {
-            state.handle_event(self, event);
+            state.handle_event(self, event, ent);
             // Check if a state transition happened during event handling
             if self.current_state.is_some() {
                 // A new state was set, call exit on the old state
