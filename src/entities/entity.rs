@@ -3,11 +3,18 @@ use crate::systems::combat::{CombatStrategy, EmotionalDamageCombat};
 use crate::factories::entity_factory::EntityFactory;
 
 // Emotion target is public due to enums being private by default
-#[derive(PartialEq,Debug)]
+#[derive(PartialEq,Debug,Clone)]
 pub enum EmotionTarget {
     Pride,
     Ego,
     Greed,
+}
+
+#[derive(Clone)]
+pub struct EntityMemento {
+    name: String,
+    position: (f32, f32),
+    emo_weakness: EmotionTarget,
 }
 
 pub struct Entity {
@@ -51,6 +58,20 @@ impl Entity {
 
     pub fn defend(&self, damage: f32) -> f32 {
         self.combat.calculate_damage_taken(damage)
+    }
+
+    pub fn create_memento(&self) -> EntityMemento {
+        EntityMemento {
+            name: self.name.clone(),
+            position: self.position,
+            emo_weakness: self.emo_weakness.clone(),
+        }
+    }
+
+    pub fn restore_from_memento(&mut self, memento: &EntityMemento) {
+        self.name = memento.name.clone();
+        self.position = memento.position;
+        self.emo_weakness = memento.emo_weakness.clone();
     }
 }
 
