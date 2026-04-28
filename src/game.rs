@@ -8,7 +8,8 @@ impl Game {
     // Run movement and combat for two entities (player and enemy)
        pub fn run_with_state_events(player: &mut Entity, enemy: &mut Entity, ctx: &mut GameContext) {
         ctx.handle_event(GameEvent::StartGame);
-        
+        // Save checkpoint before movement
+        let player_checkpoint = player.create_memento();
         println!("\n--- PLAYER MOVEMENT ---");
         for i in 0..5 {
             player.update_position();
@@ -17,8 +18,12 @@ impl Game {
             if i == 2 { ctx.handle_event(GameEvent::ResumeGame); }
         }
         println!("------------------------------------\n");
-
-        println!("--- ENEMY MOVEMENT ---");
+         // Restore to checkpoint
+        println!("\n--- RESTORING FROM CHECKPOINT ---");
+        player.restore_from_memento(&player_checkpoint);
+        println!("Player restored to: {:?}", player.position);
+        
+        println!("\n--- ENEMY MOVEMENT ---");
         for i in 0..5 {
             enemy.update_position();
             println!("Step {} → Enemy '{}' at {:?}", i + 1, enemy.name.red(), enemy.position);

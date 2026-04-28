@@ -37,7 +37,7 @@ impl CombatStrategy for AggressiveCombat {
 
 // Future Idea for enum bases emotional damage, but no target yet to really implement it
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Clone)]
 pub struct EmotionalDamageCombat {
     emotional_damage: EmotionTarget
 }
