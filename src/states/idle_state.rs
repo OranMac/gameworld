@@ -31,9 +31,9 @@ impl GameState for IdleState {
 
     fn handle_event(&mut self, ctx: &mut GameContext, event: GameEvent) {
         match event {
-            GameEvent::StartGame => ctx.set_state(Box::new(PlayingState::new())),
+            GameEvent::StartGame => {}, // Cant just start new game while idle
             GameEvent::PauseGame => ctx.set_state(Box::new(PausedState::new())),
-            GameEvent::ResumeGame => ctx.set_state(Box::new(PlayingState::new())),
+            GameEvent::ResumeGame => {}, // Game already in play
             GameEvent::EndGame => ctx.set_state(Box::new(GameOverState::new())),
             GameEvent::Tick => self.update(ctx),
         }
