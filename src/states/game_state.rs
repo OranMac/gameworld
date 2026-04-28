@@ -1,3 +1,4 @@
+use crate::entities::entity::Entity;
 use crate::states::game_context::GameContext;
 use crate::states::game_event::GameEvent;
 
@@ -11,8 +12,8 @@ pub trait GameState {
     fn exit(&mut self, ctx: &mut GameContext);
     
     // Called each game tick while in this state
-    fn update(&mut self, ctx: &mut GameContext);
+    fn update(&mut self, ctx: &mut GameContext, ent: &mut Entity);
     
     // Handle events (input, game events, etc.)
-    fn handle_event(&mut self, ctx: &mut GameContext, event: GameEvent);
+    fn handle_event(&mut self, ctx: &mut GameContext, event: GameEvent, ent: &mut Entity);
 }

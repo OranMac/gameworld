@@ -1,3 +1,4 @@
+use crate::entities::entity::Entity;
 use crate::states::game_state::GameState;
 use crate::states::game_context::GameContext;
 use crate::states::game_event::GameEvent;
@@ -28,18 +29,19 @@ impl GameState for PlayingState {
         println!("[PlayingState] Exiting after {} ticks", self.tick_count);
     }
 
-    fn update(&mut self, _ctx: &mut GameContext) {
+    fn update(&mut self, _ctx: &mut GameContext, ent: &mut Entity) {
         self.tick_count += 1;
-        // Game logic would go here: movement, combat, etc.
+        ent.update_position();
+        println!("Step {} → Player  at {:?}", ent.name, ent.position);
     }
 
-    fn handle_event(&mut self, ctx: &mut GameContext, event: GameEvent) {
+    fn handle_event(&mut self, ctx: &mut GameContext, event: GameEvent, ent: &mut Entity) {
         match event {
             GameEvent::StartGame => ctx.set_state(Box::new(IdleState::new())),
             GameEvent::PauseGame => ctx.set_state(Box::new(PausedState::new())),
             GameEvent::ResumeGame => {}, // Already playing
             GameEvent::EndGame => ctx.set_state(Box::new(GameOverState::new())),
-            GameEvent::Tick => self.update(ctx),
+            GameEvent::Tick => self.update(ctx, ent),
         }
     }
 }

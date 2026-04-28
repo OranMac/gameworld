@@ -7,15 +7,14 @@ pub struct Game;
 impl Game {
     // Run movement and combat for two entities (player and enemy)
        pub fn run_with_state_events(player: &mut Entity, enemy: &mut Entity, ctx: &mut GameContext) {
-        ctx.handle_event(GameEvent::StartGame);
+        ctx.handle_event(GameEvent::StartGame,player);
         // Save checkpoint before movement
         let player_checkpoint = player.create_memento();
         println!("\n--- PLAYER MOVEMENT ---");
         for i in 0..5 {
-            player.update_position();
-            println!("Step {} → Player '{}' at {:?}", i + 1, player.name.green(), player.position);
-            if i == 1 { ctx.handle_event(GameEvent::PauseGame); }
-            if i == 2 { ctx.handle_event(GameEvent::ResumeGame); }
+            if i == 2 { ctx.handle_event(GameEvent::PauseGame, player); }
+            if i == 4 { ctx.handle_event(GameEvent::ResumeGame, player); }
+            ctx.handle_event(GameEvent::Tick,player);
         }
         println!("------------------------------------\n");
          // Restore to checkpoint
@@ -39,7 +38,7 @@ impl Game {
             player.name.green(), damage_dealt, enemy.name.red(), damage_received
         );
 
-        ctx.handle_event(GameEvent::EndGame);
+        ctx.handle_event(GameEvent::EndGame, player);
     }
 
 
